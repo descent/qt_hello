@@ -22,18 +22,19 @@
 int main( int argc, char **argv )
 {
     QApplication a(argc,argv);
-    std::string s("Hello, 我是宋仕仁, 烏龜");
+    std::string s("Hello, 我是big5中文編碼, 烏龜");
     if (argc >= 2)
     {
       s = argv[1];
     }
 
     Hello h( s.c_str() );
-    h.setCaption( "Qt says hello" );
+    //Hello h("hello");
+    h.setWindowTitle( "Qt says hello" );
     QObject::connect( &h, SIGNAL(clicked()), &a, SLOT(quit()) );
     h.setFont( QFont("times",32,QFont::Bold) );		// default font
-    h.setBackgroundColor( Qt::white );			// default bg color
-    a.setMainWidget( &h );
+    //h.setBackgroundColor( Qt::white );			// default bg color
+    //a.setMainWidget( &h );
     h.show();
     return a.exec();
 }
