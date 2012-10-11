@@ -13,6 +13,7 @@
 #include <qtimer.h>
 #include <qpainter.h>
 #include <qpixmap.h>
+#include <QDebug>
 
 #include "convertencode.h"
 #include "big5str_to_qstr.h"
@@ -21,8 +22,8 @@
   Constructs a Hello widget. Starts a 40 ms animation timer.
 */
 
-Hello::Hello( const char *text, QWidget *parent, const char *name )
-    : QWidget(parent,name), b(0)
+Hello::Hello( const char *text, QWidget * parent, Qt::WindowFlags f)
+    : QWidget(parent, f), b(0)
 {
 
     //DS::ConvertEncode convert_encode;
@@ -40,7 +41,7 @@ Hello::Hello( const char *text, QWidget *parent, const char *name )
     timer->start( 40 );
     //QChar unicode[]={25105, 26159, 23435, 20181, 20161};
     //t=QString(qchar_array, unicode.size());
-    t=DS::big5str_to_qstr(text);
+    DS::big5str_to_qstr(text, qstr_);
 //    qDebug("err 2");
 
     resize( 260, 130 );
@@ -55,7 +56,7 @@ Hello::Hello( const char *text, QWidget *parent, const char *name )
 void Hello::animate()
 {
     b = (b + 1) & 15;
-    repaint( FALSE );
+    repaint();
 }
 
 
@@ -68,8 +69,10 @@ void Hello::animate()
 
 void Hello::mouseReleaseEvent( QMouseEvent *e )
 {
+#if 0
     if ( rect().contains( e->pos() ) )
         emit clicked();
+#endif
 }
 
 
@@ -82,15 +85,16 @@ void Hello::mouseReleaseEvent( QMouseEvent *e )
 
 void Hello::paintEvent( QPaintEvent * )
 {
+#if 1
     static int sin_tbl[16] = {
         0, 38, 71, 92, 100, 92, 71, 38,	0, -38, -71, -92, -100, -92, -71, -38};
 
-    if ( t.isEmpty() )
+    if (qstr_.isEmpty() )
         return;
 
     // 1: Compute some sizes, positions etc.
     QFontMetrics fm = fontMetrics();
-    int w = fm.width(t) + 20;
+    int w = fm.width(qstr_) + 20;
     int h = fm.height() * 2;
     int pmx = width()/2 - w/2;
     int pmy = height()/2 - h/2;
@@ -104,18 +108,22 @@ void Hello::paintEvent( QPaintEvent * )
     int x = 10;
     int y = h/2 + fm.descent();
     int i = 0;
-    p.begin( &pm );
+    //p.begin( &pm );
+    p.begin(this);
     //p.setFont( font() );
     p.setFont(QFont("unifont"));
-    while ( !t[i].isNull() ) {
+    while ( !qstr_[i].isNull() ) {
         int i16 = (b+i) & 15;
-        p.setPen( QColor((15-i16)*16,255,255,QColor::Hsv) );
-        p.drawText( x, y-sin_tbl[i16]*h/800, t.mid(i,1), 1 );
-        x += fm.width( t[i] );
+        //p.setPen( QColor((15-i16)*16,255,255,QColor::Hsv) );
+        p.setPen( QColor::fromHsv((15-i16)*16,255,255) );
+        //p.drawText( x, y-sin_tbl[i16]*h/800, qstr_.mid(i,1), 1 );
+        p.drawText( x, y-sin_tbl[i16]*h/800, qstr_.mid(i,1));
+        x += fm.width( qstr_[i] );
         i++;
     }
     p.end();
 
     // 4: Copy the pixmap to the Hello widget
-    bitBlt( this, pmx, pmy, &pm );
+    //bitBlt( this, pmx, pmy, &pm );
+#endif
 }

@@ -18,7 +18,7 @@ class Hello : public QWidget
 {
     Q_OBJECT
 public:
-    Hello( const char *text, QWidget *parent=0, const char *name=0 );
+    Hello( const char *text, QWidget * parent = 0, Qt::WindowFlags f = 0);
 signals:
     void clicked();
 protected:
@@ -27,7 +27,7 @@ protected:
 private slots:
     void animate();
 private:
-    QString t;
+    QString qstr_;
     int     b;
 };
 
