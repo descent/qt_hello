@@ -10,9 +10,10 @@
 
 #ifndef HELLO_H
 #define HELLO_H
+// qt5
+//#include <QtWidgets>
 
-#include <qwidget.h>
-
+#include <QWidget> 
 
 class Hello : public QWidget
 {
