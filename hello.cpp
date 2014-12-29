@@ -99,6 +99,8 @@ void Hello::paintEvent( QPaintEvent * )
     int pmx = width()/2 - w/2;
     int pmy = height()/2 - h/2;
 
+    resize( w, h );
+
     // 2: Create the pixmap and fill it with the widget's background
     QPixmap pm( w, h );
     pm.fill( this, pmx, pmy );
