@@ -10,10 +10,14 @@
 
 #ifndef HELLO_H
 #define HELLO_H
-// qt5
-//#include <QtWidgets>
 
+// http://doc.qt.digia.com/4.6/qtglobal.html#QT_VERSION
+#if QT_VERSION >= 0x050000
+// qt5
+#include <QtWidgets>
+#else
 #include <QWidget> 
+#endif
 
 class Hello : public QWidget
 {
